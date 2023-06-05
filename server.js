@@ -7,7 +7,8 @@ import authRoutes from "./routes/authRoute.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cors from "cors";
-
+//line 1 for prod
+import path from "path";
 //configure env
 dotenv.config();
 
@@ -21,6 +22,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+//line 2 for prod
+app.use(express.static(path.join(__dirname, "./client/build")));
 
 //routes
 app.use("/api/v1/auth", authRoutes);
@@ -28,8 +31,9 @@ app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
 
 //rest api
-app.get("/", (req, res) => {
-  res.send("<h1>Welcome to ecommerce app</h1>");
+// line 3 for prod
+app.use("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
 //PORT
